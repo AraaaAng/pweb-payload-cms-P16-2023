@@ -28,42 +28,33 @@ const Todo = {
   hooks: {
     afterOperation: [
       async (args) => {
+        let action, logMessage;
+  
         if (args.operation === "create") {
-          console.log('Operation:', args.operation);
-          await payload.create({
-            collection: "Logs",
-            data: {
-              name: args.result.title,
-              log: args.result.id,
-              timestamp: new Date(),
-              action: "Todo Created",
-            },
-          });
+          action = "Todo Created";
+          logMessage = args.result.title;
         } else if (args.operation === "deleteByID") {
-          console.log('Operation:', args.operation);
-          await payload.create({
-            collection: "Logs",
-            data: {
-              name: args.result.name,
-              log: args.result.id,
-              timestamp: new Date(),
-              action: "Todo Deleted",
-            },
-          });
+          action = "Todo Deleted";
+          logMessage = args.result.title;
         } else if (args.operation === "updateByID") {
+          action = "Todo Updated";
+          logMessage = args.result.title;
+        }
+  
+        if (action) {
           console.log('Operation:', args.operation);
           await payload.create({
             collection: "Logs",
             data: {
-              name: args.result.name,
+              name: logMessage,
               log: args.result.id,
               timestamp: new Date(),
-              action: "Todo Updated",
+              action: action,
             },
           });
         }
       },
     ],
-  },
+  },  
 };
 export default Todo;

@@ -23,41 +23,31 @@ const Category = {
   hooks: {
     afterOperation: [
       async (args) => {
-        console.dir(args.operation);
+        let action, logMessage;
+  
         if (args.operation === "create") {
+          action = "Category Created";
+        } else if (args.operation === "deleteByID") {
+          action = "Category Deleted";
+        } else if (args.operation === "updateByID") {
+          action = "Category Updated";
+        }
+  
+        if (action) {
+          console.log('Operation:', args.operation);
           await payload.create({
             collection: "Logs",
             data: {
               name: args.result.name,
               log: args.result.id,
               timestamp: new Date(),
-              action: "Category Created",
-            },
-          });
-        } else if (args.operation === "delete") {
-          await payload.create({
-            collection: "Logs",
-            data: {
-              name: args.result.name,
-              log: args.result.id,
-              timestamp: new Date(),
-              action: "Category Deleted",
-            },
-          });
-        } else if (args.operation === "update") {
-          await payload.create({
-            collection: "Logs",
-            data: {
-              name: args.result.name,
-              log: args.result.id,
-              timestamp: new Date(),
-              action: "Category Updated",
+              action: action,
             },
           });
         }
       },
     ],
-  },
+  },  
 };
 
 export default Category;
